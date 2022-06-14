@@ -1,7 +1,37 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useState } from "react";
 import "./Login.css";
+import classnames from "classnames";
 
 function Login() {
+  const [id, setId] = useState("");
+  const [msgId, setMsgId] = useState("3-15자의 영문/숫자 조합");
+  const [isId, setIsId] = useState(false);
+
+  // 아이디
+  const onChangeName = useCallback((e) => {
+    const regExp = /^[a-z0-9]{3,15}$/;
+    setId(e.target.value);
+
+    if (e.target.value.length < 3 || e.target.value.length > 15) {
+      // 길이 체크
+      setMsgId("사용하실 수 없는 아이디입니다.");
+      setIsId(false);
+    } else if (!regExp.test(e.target.value)) {
+      // 영문 또는 숫자
+      setMsgId("영문 또는 숫자만 입려해주세요.");
+      setIsId(false);
+    } else if (e.target.value.match(/\s/g)) {
+      // 공백 체크
+      setMsgId("공백없이 입력해주세요.");
+      setIsId(false);
+      // setId(e.target.value.replace(/\s/g, "")); // 공백 자동 제거
+    } else {
+      setMsgId("사용하실 수 있습니다.");
+      setIsId(true);
+    }
+  }, []);
+
   return (
     <div className="wrap">
       <div className="container">
@@ -13,8 +43,23 @@ function Login() {
               <label htmlFor="id">
                 아이디<span>*</span>
               </label>
-              <input name="id" required placeholder="아이디를 입력해주세요." />
-              <p className="error-msg  msg-id">3-15자의 영문/숫자 조합</p>
+              <input
+                name="id"
+                required
+                placeholder="아이디를 입력해주세요."
+                value={id}
+                onChange={onChangeName}
+                maxLength="15"
+              />
+              <p
+                className={classnames(
+                  "error-msg",
+                  "msg-id",
+                  id && (isId ? "good" : "error")
+                )}
+              >
+                {msgId}
+              </p>
             </div>
             <button className="btn-check">중복확인</button>
           </div>
