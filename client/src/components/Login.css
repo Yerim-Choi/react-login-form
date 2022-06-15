@@ -1,7 +1,6 @@
 @font-face {
   font-family: "KoPubDotumMedium";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/KoPubDotumMedium.woff")
-    format("woff");
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/KoPubDotumMedium.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -70,6 +69,10 @@ body {
   height: 35px;
   border: 0;
   border-bottom: 1px solid #c9cad0;
+}
+
+.row .item input.error {
+  border-bottom: 1px solid #ee6a7b !important;
 }
 
 .row .item p.error-msg {

@@ -8,6 +8,14 @@ function Login() {
   const [msgId, setMsgId] = useState("3-15자의 영문/숫자 조합");
   const [isId, setIsId] = useState(false);
 
+  const [pw, setPw] = useState("");
+  const [msgPw, setMsgPw] = useState("8-16자의 영문/숫자 조합");
+  const [isPw, setIsPw] = useState(false);
+
+  const [pwCheck, setPwCheck] = useState("");
+  const [msgCheckPw, setMsgCheckPw] = useState("");
+  const [isPwCheck, setIsPwCheck] = useState(false);
+
   // 아이디
   const onChangeName = useCallback((e) => {
     const regExp = /^[a-z0-9]{3,15}$/;
@@ -32,6 +40,42 @@ function Login() {
     }
   }, []);
 
+  // 비밀번호
+  const onChangePw = useCallback((e) => {
+    const regExp = /^[a-z0-9]{8,16}$/;
+    setPw(e.target.value);
+
+    if (e.target.value.length < 8 || e.target.value.length > 16) {
+      // 길이 체크
+      setMsgPw("사용하실 수 없는 비밀번호입니다.");
+      setIsPw(false);
+    } else if (!regExp.test(e.target.value)) {
+      // 영문 또는 숫자
+      setMsgPw("영문 또는 숫자만 입려해주세요.");
+      setIsPw(false);
+    } else if (e.target.value.match(/\s/g)) {
+      // 공백 체크
+      setMsgPw("공백없이 입력해주세요.");
+      setIsPw(false);
+    } else {
+      setMsgPw("사용하실 수 있습니다.");
+      setIsPw(true);
+    }
+  }, []);
+
+  // 비밀번호 확인
+  const onChangePwCheck = (e) => {
+    setPwCheck(e.target.value);
+    if (pw !== e.target.value) {
+      // 공백 체크
+      setMsgCheckPw("비밀번호가 일치하지 않습니다.");
+      setIsPwCheck(false);
+    } else {
+      setMsgCheckPw("사용하실 수 있습니다");
+      setIsPwCheck(true);
+    }
+  };
+
   return (
     <div className="wrap">
       <div className="container">
@@ -44,6 +88,7 @@ function Login() {
                 아이디<span>*</span>
               </label>
               <input
+                className={id && (isId ? "" : "error")}
                 name="id"
                 required
                 placeholder="아이디를 입력해주세요."
@@ -70,13 +115,25 @@ function Login() {
                 비밀번호<span>*</span>
               </label>
               <input
+                className={pw && (isPw ? "" : "error")}
                 name="pw"
                 required
                 type="password"
                 placeholder="비밀번호를 입력해주세요."
+                value={pw}
+                onChange={onChangePw}
+                maxLength="16"
               />
-              {/* <p className="error-msg  msg-pw">8-16자의 영문/숫자 조합</p> */}
-              <p className="error-msg good">사용하실 수 있습니다.</p>
+
+              <p
+                className={classnames(
+                  "error-msg",
+                  "msg-id",
+                  pw && (isPw ? "good" : "error")
+                )}
+              >
+                {msgPw}
+              </p>
             </div>
           </div>
           <div className="row">
@@ -85,13 +142,27 @@ function Login() {
                 비밀번호 확인<span>*</span>
               </label>
               <input
-                className="pw-check"
+                className={classnames(
+                  "pw-check",
+                  pwCheck && (isPwCheck ? "" : "error")
+                )}
                 name="pw-check"
                 required
                 type="password"
                 placeholder="비밀번호를 한번 더 입력해주세요."
+                value={pwCheck}
+                onChange={onChangePwCheck}
+                maxLength="16"
               />
-              <p className="error-msg check-msg-pw error">일치하지 않습니다.</p>
+              <p
+                className={classnames(
+                  "error-msg",
+                  "msg-id",
+                  pwCheck && (isPwCheck ? "good" : "error")
+                )}
+              >
+                {msgCheckPw}
+              </p>
             </div>
           </div>
           {/* name */}
