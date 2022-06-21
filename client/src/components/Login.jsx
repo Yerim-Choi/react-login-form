@@ -16,6 +16,8 @@ function Login() {
   const [msgCheckPw, setMsgCheckPw] = useState("");
   const [isPwCheck, setIsPwCheck] = useState(false);
 
+  const [phone, setPhone] = useState("");
+
   // 아이디
   const onChangeName = useCallback((e) => {
     const regExp = /^[a-z0-9]{3,15}$/;
@@ -74,6 +76,20 @@ function Login() {
       setMsgCheckPw("사용하실 수 있습니다");
       setIsPwCheck(true);
     }
+  };
+
+  // 휴대폰 번호
+  const onChangePhone = (e) => {
+    const numberExp = /[^0-9]/gi;
+    setPhone(
+      e.target.value
+        .replace(numberExp, "")
+        .replace(
+          /(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,
+          "$1-$2-$3"
+        )
+        .replace("--", "-")
+    );
   };
 
   return (
@@ -204,6 +220,9 @@ function Login() {
                 name="phone"
                 required
                 placeholder="휴대폰 번호를 입력해주세요."
+                value={phone}
+                onChange={onChangePhone}
+                maxLength="13"
               />
             </div>
           </div>
