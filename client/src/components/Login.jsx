@@ -16,10 +16,16 @@ function Login() {
   const [msgCheckPw, setMsgCheckPw] = useState("");
   const [isPwCheck, setIsPwCheck] = useState(false);
 
+  const [name, setName] = useState("");
+
+  const [email, setEmail] = useState("");
+  const [msgEmail, setMsgEmail] = useState("");
+  const [isEmail, setIsEmail] = useState(false);
+
   const [phone, setPhone] = useState("");
 
   // 아이디
-  const onChangeName = useCallback((e) => {
+  const onChangeId = useCallback((e) => {
     const regExp = /^[a-z0-9]{3,15}$/;
     setId(e.target.value);
 
@@ -78,6 +84,25 @@ function Login() {
     }
   };
 
+  // 이름
+  const onChangeName = (e) => {
+    setName(e.target.value);
+  };
+
+  // 이메일
+  const onChangeEmail = (e) => {
+    // eslint-disable-next-line
+    const emailExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    setEmail(e.target.value);
+    if (!emailExp.test(e.target.value)) {
+      setMsgEmail("잘못된 이메일 형식 입니다.");
+      setIsEmail(false);
+    } else {
+      setMsgEmail("사용하실 수 있습니다.");
+      setIsEmail(true);
+    }
+  };
+
   // 휴대폰 번호
   const onChangePhone = (e) => {
     const numberExp = /[^0-9]/gi;
@@ -109,7 +134,7 @@ function Login() {
                 required
                 placeholder="아이디를 입력해주세요."
                 value={id}
-                onChange={onChangeName}
+                onChange={onChangeId}
                 maxLength="15"
               />
               <p
@@ -187,10 +212,16 @@ function Login() {
               <label htmlFor="name">
                 이름<span>*</span>
               </label>
-              <input name="name" required placeholder="이름을 입력해주세요." />
-              <p className="error-msg check-msg-name">
+              <input
+                name="name"
+                required
+                placeholder="이름을 입력해주세요."
+                value={name}
+                onChange={onChangeName}
+              />
+              {/* <p className="error-msg check-msg-name">
                 한글 15자, 영문 30자까지 입력
-              </p>
+              </p> */}
             </div>
           </div>
           {/* email */}
@@ -200,12 +231,21 @@ function Login() {
                 이메일<span>*</span>
               </label>
               <input
+                className={email && (isEmail ? "" : "error")}
                 name="email"
                 required
                 placeholder="이메일 주소를 입력해주세요."
+                value={email}
+                onChange={onChangeEmail}
               />
-              <p className="error-msg check-msg-email error">
-                잘못된 이메일 형식입니다.
+              <p
+                className={classnames(
+                  "error-msg",
+                  "msg-email",
+                  email && (isEmail ? "good" : "error")
+                )}
+              >
+                {msgEmail}
               </p>
             </div>
           </div>
