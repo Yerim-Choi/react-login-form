@@ -2,6 +2,8 @@ import React, { useCallback } from "react";
 import { useState } from "react";
 import "./Login.css";
 import classnames from "classnames";
+import PopupDom from "./PopupDom";
+import PopupDaumPostCode from "./PopupDaumPostCode";
 
 function Login() {
   const [id, setId] = useState("");
@@ -23,6 +25,21 @@ function Login() {
   const [isEmail, setIsEmail] = useState(false);
 
   const [phone, setPhone] = useState("");
+
+  // 팝업창 상태 관리
+  const [isOpen, setIsOpen] = useState(false);
+  const [address, setAdderss] = useState("");
+
+  // 팝업창 열기
+  const openPostCode = (e) => {
+    e.preventDefault();
+    setIsOpen(true);
+  };
+
+  // 팝업창 닫기
+  const closePostCode = () => {
+    setIsOpen(false);
+  };
 
   // 아이디
   const onChangeId = useCallback((e) => {
@@ -276,9 +293,24 @@ function Login() {
                 name="address"
                 required
                 placeholder="주소를 입력해주세요."
+                value={address}
               />
             </div>
-            <button className="btn-check">주소 검색</button>
+            <button className="btn-check" onClick={openPostCode}>
+              주소 검색
+            </button>
+            {/* 팝업 */}
+            <div id="popup-daum-postcode">
+              {isOpen && (
+                <PopupDom>
+                  <PopupDaumPostCode
+                    address={address}
+                    setAdderss={setAdderss}
+                    onClose={closePostCode}
+                  />
+                </PopupDom>
+              )}
+            </div>
           </div>
           {/* 가입하기 버튼 */}
           <button className="btn-join">가입하기</button>
